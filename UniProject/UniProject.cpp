@@ -120,7 +120,6 @@ int main()
 		}
 		else {
 			std::cout << "The non-refundable amount is " << nonRefundableTotal;
-			std::cout << "testy mctesttest";
 		}
 
 	}
