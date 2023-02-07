@@ -1,12 +1,15 @@
 #include <iostream>
 #include <vector>
 
-int main()
-{
+
+int getJourneyNum() {
 	int JourneyNum;
 	std::cout << "how many journeys have you taken?: ";
 	std::cin >> JourneyNum;
+	return JourneyNum;
+}
 
+int getClaimType() {
 	int claimType;
 	std::cout << "Please select a claim option from below? \n";
 	std::cout << "\n";
@@ -14,23 +17,42 @@ int main()
 	std::cout << "2. travel\n";
 	std::cout << "Choice: ";
 	std::cin >> claimType;
+	return claimType;
+}
+int getTravelCosts() {
+	int journeyTravelCosts;
+	std::cout << "What were the travel costs for your first journey?: ";
+	std::cin >> journeyTravelCosts;
+	return journeyTravelCosts;
+}
+
+int getExpenses() {
+	int journeyExpenseCosts;
+	std::cout << "What were the Expenses for your first journey?: ";
+	std::cin >> journeyExpenseCosts;
+	return journeyExpenseCosts;
+}
+
+int main()
+{
+	int journeyNum = getJourneyNum();
+	int claimType = getClaimType();
+	
 
 	if (claimType == 1)
 	{
-		std::vector<std::vector<int>> TotalJourneyCosts;
+		std::vector<std::vector<int>> totalJourneyCosts;
 		int journeyTravelCosts;
 		int journeyExpenseCosts;
 		int claimableExpenses = 0;
-		for (size_t i = 1; i <= JourneyNum; i++)
+		for (size_t i = 1; i <= journeyNum; i++)
 		{
 			if (i == 1) {
-				std::cout << "What were the travel costs for your first journey?: ";
-				std::cin >> journeyTravelCosts;
-
-				std::cout << "What were the Expenses for your first journey?: ";
-				std::cin >> journeyExpenseCosts;
+				journeyTravelCosts = getTravelCosts();
+				journeyExpenseCosts = getExpenses();
+				
 				std::vector <int> firstJourney = { journeyTravelCosts,journeyExpenseCosts };
-				TotalJourneyCosts.push_back(firstJourney);
+				totalJourneyCosts.push_back(firstJourney);
 				if (journeyExpenseCosts > 50) {
 					claimableExpenses += 50;
 				}
@@ -47,7 +69,7 @@ int main()
 				std::cin >> journeyExpenseCosts;
 
 				std::vector <int> currentJourney = { journeyTravelCosts,journeyExpenseCosts };
-				TotalJourneyCosts.push_back(currentJourney);
+				totalJourneyCosts.push_back(currentJourney);
 				if (journeyExpenseCosts > 50) {
 					claimableExpenses += 50;
 				}
@@ -71,7 +93,7 @@ int main()
 		int elementCount = 0;
 		int expensesTotal = 0;
 		int travelTotal = 0;
-		for (const auto& row : TotalJourneyCosts) {
+		for (const auto& row : totalJourneyCosts) {
 			rowCount += 1;
 			for (const auto& element : row) {
 				elementCount += 1;
@@ -96,13 +118,13 @@ int main()
 		}
 		std::cout << "Expenses Total: " << expensesTotal << "\n";
 		std::cout << "Employees will be payed back 100% of travel costs which is " << travelTotal << "\n";
-		std::cout << "Employees will be payed back up to 50 of their expenses anything over that will have to be covered by the employee\n";
+		std::cout << "Employees will be payed back up to 50 pounds of their expenses anything over that will have to be covered by the employee\n";
 		std::cout << "The claimable amount is : " << claimableExpenses << "\n";
 
 		int nonRefundableTotal = 0;
 		elementCount = 0;
 		rowCount = 0;
-		for (const auto& row : TotalJourneyCosts) {
+		for (const auto& row : totalJourneyCosts) {
 			rowCount += 1;
 			for (const auto& element : row) {
 				elementCount += 1;
