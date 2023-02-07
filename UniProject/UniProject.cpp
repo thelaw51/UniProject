@@ -33,6 +33,22 @@ int getExpenses() {
 	return journeyExpenseCosts;
 }
 
+int reclaimableTax(int TotalCost) {
+	int reclaimableTax = TotalCost * 0.2;
+	return reclaimableTax;
+}
+
+void showResultsTemplate() {
+	std::cout << "\n";
+	std::cout << "Key:\n";
+	std::cout << "---------------------------------------------\n";
+	std::cout << "T = Travel E = Expenses C=Company tax claim\n";
+	std::cout << "\n";
+	std::cout << "Travel costs total:\n";
+	std::cout << "---------------------------------------------\n";
+	std::cout << "T   E   Total C\n";
+}
+
 int main()
 {
 	int journeyNum = getJourneyNum();
@@ -80,14 +96,7 @@ int main()
 			}
 		}
 
-		std::cout << "\n";
-		std::cout << "Key:\n";
-		std::cout << "---------------------------------------------\n";
-		std::cout << "T = Travel E = Expenses C=Company tax claim\n";
-		std::cout << "\n";
-		std::cout << "Travel costs total:\n";
-		std::cout << "---------------------------------------------\n";
-		std::cout << "T   E   Total C\n";
+		showResultsTemplate();
 		int previousElement = 0;
 		int rowCount = 0;
 		int elementCount = 0;
@@ -102,7 +111,7 @@ int main()
 				}
 				else {
 					int travelCost = element + previousElement;
-					std::cout << element << " " << travelCost << "   " << travelCost * 0.2;
+					std::cout << element << " " << travelCost << "   " << reclaimableTax(travelCost);
 				}
 				previousElement = element;
 				if (elementCount == 2)
