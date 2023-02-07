@@ -1,14 +1,14 @@
 #include <iostream>
 #include <vector>
 
-
+//GETS THE NUMBER OF JOURNEYS FROM THE USER TO USE FOR THE LOOP TO TAKE THE JOURNEY COSTS
 int getJourneyNum() {
 	int JourneyNum;
 	std::cout << "how many journeys have you taken?: ";
 	std::cin >> JourneyNum;
 	return JourneyNum;
 }
-
+//GETS THE TYPE OF CLAIM FROM THE USER WHEATHER IT IS TRAVEL AND EXPENSE OR JUST TRAVEL
 int getClaimType() {
 	int claimType;
 	std::cout << "Please select a claim option from below? \n";
@@ -19,18 +19,38 @@ int getClaimType() {
 	std::cin >> claimType;
 	return claimType;
 }
-int getTravelCosts() {
+//GETS CALL THROUGH OUT THE
+int getTravelCosts(int loopCounter) {
 	int journeyTravelCosts;
-	std::cout << "What were the travel costs for your first journey?: ";
-	std::cin >> journeyTravelCosts;
-	return journeyTravelCosts;
+	if (loopCounter == 1) {
+		
+		std::cout << "What were the travel costs for your first journey?: ";
+		std::cin >> journeyTravelCosts;
+		return journeyTravelCosts;
+	}
+	else
+	{
+		std::cout << "What were the travel costs for journey number " << loopCounter << "?: ";
+		std::cin >> journeyTravelCosts;
+		return journeyTravelCosts;
+	}
+	
 }
 
-int getExpenses() {
+int getExpenses(int loopCounter) {
 	int journeyExpenseCosts;
-	std::cout << "What were the Expenses for your first journey?: ";
-	std::cin >> journeyExpenseCosts;
-	return journeyExpenseCosts;
+	if (loopCounter == 1) {
+		std::cout << "What were the Expenses for your first journey?: ";
+		std::cin >> journeyExpenseCosts;
+		return journeyExpenseCosts;
+	}
+	else 
+	{
+		std::cout << "What were the Expenses for journey number " << loopCounter << "?: ";
+		std::cin >> journeyExpenseCosts;
+		return journeyExpenseCosts;
+	}
+	
 }
 
 int reclaimableTax(int TotalCost) {
@@ -49,6 +69,33 @@ void showResultsTemplate() {
 	std::cout << "T   E   Total C\n";
 }
 
+int employeesClaim(int nonRefundableTotal,std::vector<std::vector<int>> &totalJourneyCosts) {
+	int elementCount = 0;
+	int rowCount = 0;
+	for (const auto& row : totalJourneyCosts) {
+		rowCount += 1;
+		for (const auto& element : row) {
+			elementCount += 1;
+			if (elementCount == 2) {
+				if (element > 50) {
+					nonRefundableTotal += element - 50;
+					return nonRefundableTotal;
+				}
+			}
+		}
+		elementCount = 0;
+	}
+}
+
+void claimableExpense(int &journeyExpenseCosts,int &claimableExpenses) {
+	if (journeyExpenseCosts > 50) {
+		claimableExpenses += 50;
+	}
+	else
+	{
+		claimableExpenses += journeyExpenseCosts;
+	}
+}
 int main()
 {
 	int journeyNum = getJourneyNum();
@@ -63,37 +110,14 @@ int main()
 		int claimableExpenses = 0;
 		for (size_t i = 1; i <= journeyNum; i++)
 		{
-			if (i == 1) {
-				journeyTravelCosts = getTravelCosts();
-				journeyExpenseCosts = getExpenses();
+			
+				journeyTravelCosts = getTravelCosts(i);
+				journeyExpenseCosts = getExpenses(i);
 				
-				std::vector <int> firstJourney = { journeyTravelCosts,journeyExpenseCosts };
-				totalJourneyCosts.push_back(firstJourney);
-				if (journeyExpenseCosts > 50) {
-					claimableExpenses += 50;
-				}
-				else
-				{
-					claimableExpenses += journeyExpenseCosts;
-				}
-			}
-			else {
-				std::cout << "What were the travel costs for journey number " << i << "?: ";
-				std::cin >> journeyTravelCosts;
-
-				std::cout << "What were the Expenses for journey number " << i << "?: ";
-				std::cin >> journeyExpenseCosts;
-
+				claimableExpense(journeyExpenseCosts,claimableExpenses);
+	
 				std::vector <int> currentJourney = { journeyTravelCosts,journeyExpenseCosts };
 				totalJourneyCosts.push_back(currentJourney);
-				if (journeyExpenseCosts > 50) {
-					claimableExpenses += 50;
-				}
-				else
-				{
-					claimableExpenses += journeyExpenseCosts;
-				}
-			}
 		}
 
 		showResultsTemplate();
@@ -131,21 +155,8 @@ int main()
 		std::cout << "The claimable amount is : " << claimableExpenses << "\n";
 
 		int nonRefundableTotal = 0;
-		elementCount = 0;
-		rowCount = 0;
-		for (const auto& row : totalJourneyCosts) {
-			rowCount += 1;
-			for (const auto& element : row) {
-				elementCount += 1;
-				if (elementCount == 2) {
-					if (element > 50) {
-						nonRefundableTotal += element - 50;
+		employeesClaim(nonRefundableTotal,totalJourneyCosts);
 
-					}
-				}
-			}
-			elementCount = 0;
-		}
 		if (nonRefundableTotal < 0) {
 			std::cout << "there is no non-refundable costs involved in these journeys";
 		}
