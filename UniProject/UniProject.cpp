@@ -1,13 +1,34 @@
 #include <iostream>
 #include <vector>
 #include <conio.h>
+#include <cassert>
+#include <string>
+#include <cstdlib>
 
 //GETS THE NUMBER OF JOURNEYS FROM THE USER TO USE FOR THE LOOP TO TAKE THE JOURNEY COSTS
 int getJourneyNum() {
-	int JourneyNum;
-	std::cout << "how many journeys have you taken?: ";
-	std::cin >> JourneyNum;
-	return JourneyNum;
+
+	std::string JourneyNumInput;
+	int ValidJourneyNum;
+	bool ValidJourneyInput = false;
+	while (ValidJourneyInput == false)
+	{
+	std::cout << "Please enter the number of journeys you have taken: ";
+	std::cin >> JourneyNumInput;
+
+	try {
+		ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
+		ValidJourneyInput = true;
+		system("cls");
+		return ValidJourneyNum;
+	}
+	catch (std::invalid_argument& e) {
+		std::cout << "Invalid input. Please enter a valid integer.\n";
+		std::cout << "PRESS ENTER TO TRY AGAIN";
+		_getch();
+		system("cls");
+	}
+	}
 }
 //GETS THE TYPE OF CLAIM FROM THE USER WHEATHER IT IS TRAVEL AND EXPENSE OR JUST TRAVEL
 int getClaimType() {
@@ -18,6 +39,7 @@ int getClaimType() {
 	std::cout << "2. travel\n";
 	std::cout << "Choice: ";
 	std::cin >> claimType;
+	system("cls");
 	return claimType;
 }
 //GETS CALL THROUGH OUT THE
@@ -27,12 +49,14 @@ int getTravelCosts(int loopCounter) {
 		
 		std::cout << "What were the travel costs for your first journey?: ";
 		std::cin >> journeyTravelCosts;
+		system("cls");
 		return journeyTravelCosts;
 	}
 	else
 	{
 		std::cout << "What were the travel costs for journey number " << loopCounter << "?: ";
 		std::cin >> journeyTravelCosts;
+		system("cls");
 		return journeyTravelCosts;
 	}
 	
@@ -43,12 +67,14 @@ int getExpenses(int loopCounter) {
 	if (loopCounter == 1) {
 		std::cout << "What were the Expenses for your first journey?: ";
 		std::cin >> journeyExpenseCosts;
+		system("cls");
 		return journeyExpenseCosts;
 	}
 	else 
 	{
 		std::cout << "What were the Expenses for journey number " << loopCounter << "?: ";
 		std::cin >> journeyExpenseCosts;
+		system("cls");
 		return journeyExpenseCosts;
 	}
 	
@@ -60,7 +86,6 @@ int reclaimableTax(int TotalCost) {
 }
 
 void showResultsTemplate() {
-	std::cout << "\n";
 	std::cout << "Key:\n";
 	std::cout << "---------------------------------------------\n";
 	std::cout << "T = Travel E = Expenses C=Company tax claim\n";
@@ -151,10 +176,13 @@ int main()
 			elementCount = 0;
 		}
 		std::cout << "Expenses Total: " << expensesTotal << "\n";
+		std::cout << "\n";
 		std::cout << "Employees will be payed back 100% of travel costs which is " << travelTotal << "\n";
+		std::cout << "\n";
 		std::cout << "Employees will be payed back up to 50 pounds of their expenses anything over that will have to be covered by the employee\n";
+		std::cout << "\n";
 		std::cout << "The claimable amount is : " << claimableExpenses << "\n";
-
+		std::cout << "\n";
 		int nonRefundableTotal = 0;
 		employeesClaim(nonRefundableTotal,totalJourneyCosts);
 
