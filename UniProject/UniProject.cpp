@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <conio.h>
 
 //GETS THE NUMBER OF JOURNEYS FROM THE USER TO USE FOR THE LOOP TO TAKE THE JOURNEY COSTS
 int getJourneyNum() {
@@ -167,4 +168,5 @@ int main()
 	}
 	else if (claimType == 2) {
 	}
+	_getch();
 }
