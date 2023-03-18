@@ -5,6 +5,29 @@
 #include <string>
 #include <cstdlib>
 
+
+#pragma region "Error Messeges"
+//GENERAL FUNCTION FOR WHEN INCORRECT DATA TYPE IS ENTERED
+void InputDataTypeError() {
+	std::cout << "Invalid input. Please enter a valid .\n";
+	std::cout << "PRESS ENTER TO TRY AGAIN";
+	_getch();
+	system("cls");
+}
+
+void WrongMenuOptionSelection() {
+	std::cout << "Invalid choice. Please choose from one of the menu options .\n";
+	std::cout << "PRESS ENTER TO TRY AGAIN";
+	_getch();
+	system("cls");
+}
+
+#pragma endregion
+
+
+
+#pragma region "Main Code"
+
 //GETS THE NUMBER OF JOURNEYS FROM THE USER TO USE FOR THE LOOP TO TAKE THE JOURNEY COSTS
 int getJourneyNum() {
 
@@ -13,40 +36,62 @@ int getJourneyNum() {
 	bool ValidJourneyInput = false;
 	while (ValidJourneyInput == false)
 	{
-	std::cout << "Please enter the number of journeys you have taken: ";
-	std::cin >> JourneyNumInput;
+		std::cout << "Please enter the number of journeys you have taken: ";
+		std::cin >> JourneyNumInput;
 
-	try {
-		ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
-		ValidJourneyInput = true;
-		system("cls");
-		return ValidJourneyNum;
-	}
-	catch (std::invalid_argument& e) {
-		std::cout << "Invalid input. Please enter a valid integer.\n";
-		std::cout << "PRESS ENTER TO TRY AGAIN";
-		_getch();
-		system("cls");
-	}
+		try
+		{
+			ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
+			ValidJourneyInput = true;
+			system("cls");
+			return ValidJourneyNum;
+		}
+		catch (std::invalid_argument& e) {
+			InputDataTypeError();
+		}
 	}
 }
 //GETS THE TYPE OF CLAIM FROM THE USER WHEATHER IT IS TRAVEL AND EXPENSE OR JUST TRAVEL
 int getClaimType() {
-	int claimType;
-	std::cout << "Please select a claim option from below? \n";
-	std::cout << "\n";
-	std::cout << "1. travel and expenses\n";
-	std::cout << "2. travel\n";
-	std::cout << "Choice: ";
-	std::cin >> claimType;
+	std::string ClaimTypeInput;
+	int ValidClaimType;
+	bool ValidClaimTypeSel = false;
+	while (ValidClaimTypeSel == false)
+	{
+		std::cout << "Please select a claim option from below? \n";
+		std::cout << "\n";
+		std::cout << "1. travel and expenses\n";
+		std::cout << "2. travel\n";
+		std::cout << "Choice: ";
+		std::cin >> ClaimTypeInput;
+		try
+		{
+			ValidClaimType = std::stoi(ClaimTypeInput); // Convert input to an integer
+			system("cls");
+			if (ValidClaimType != 1 && ValidClaimType != 2)
+			{
+				WrongMenuOptionSelection();
+				continue;
+			}
+			else
+			{
+				ValidClaimTypeSel = true;
+				return ValidClaimType;
+
+			}
+		}
+		catch (std::invalid_argument& e)
+		{
+			InputDataTypeError();
+		}
+	}
 	system("cls");
-	return claimType;
 }
 //GETS CALL THROUGH OUT THE
 int getTravelCosts(int loopCounter) {
 	int journeyTravelCosts;
 	if (loopCounter == 1) {
-		
+
 		std::cout << "What were the travel costs for your first journey?: ";
 		std::cin >> journeyTravelCosts;
 		system("cls");
@@ -59,7 +104,7 @@ int getTravelCosts(int loopCounter) {
 		system("cls");
 		return journeyTravelCosts;
 	}
-	
+
 }
 
 int getExpenses(int loopCounter) {
@@ -70,14 +115,14 @@ int getExpenses(int loopCounter) {
 		system("cls");
 		return journeyExpenseCosts;
 	}
-	else 
+	else
 	{
 		std::cout << "What were the Expenses for journey number " << loopCounter << "?: ";
 		std::cin >> journeyExpenseCosts;
 		system("cls");
 		return journeyExpenseCosts;
 	}
-	
+
 }
 
 int reclaimableTax(int TotalCost) {
@@ -95,7 +140,7 @@ void showResultsTemplate() {
 	std::cout << "T   E   Total C\n";
 }
 
-int employeesClaim(int nonRefundableTotal,std::vector<std::vector<int>> &totalJourneyCosts) {
+int employeesClaim(int nonRefundableTotal, std::vector<std::vector<int>>& totalJourneyCosts) {
 	int elementCount = 0;
 	int rowCount = 0;
 	for (const auto& row : totalJourneyCosts) {
@@ -113,7 +158,7 @@ int employeesClaim(int nonRefundableTotal,std::vector<std::vector<int>> &totalJo
 	}
 }
 
-void claimableExpense(int &journeyExpenseCosts,int &claimableExpenses) {
+void claimableExpense(int& journeyExpenseCosts, int& claimableExpenses) {
 	if (journeyExpenseCosts > 50) {
 		claimableExpenses += 50;
 	}
@@ -126,7 +171,7 @@ int main()
 {
 	int journeyNum = getJourneyNum();
 	int claimType = getClaimType();
-	
+
 
 	if (claimType == 1)
 	{
@@ -136,14 +181,14 @@ int main()
 		int claimableExpenses = 0;
 		for (size_t i = 1; i <= journeyNum; i++)
 		{
-			
-				journeyTravelCosts = getTravelCosts(i);
-				journeyExpenseCosts = getExpenses(i);
-				
-				claimableExpense(journeyExpenseCosts,claimableExpenses);
-	
-				std::vector <int> currentJourney = { journeyTravelCosts,journeyExpenseCosts };
-				totalJourneyCosts.push_back(currentJourney);
+
+			journeyTravelCosts = getTravelCosts(i);
+			journeyExpenseCosts = getExpenses(i);
+
+			claimableExpense(journeyExpenseCosts, claimableExpenses);
+
+			std::vector <int> currentJourney = { journeyTravelCosts,journeyExpenseCosts };
+			totalJourneyCosts.push_back(currentJourney);
 		}
 
 		showResultsTemplate();
@@ -184,7 +229,7 @@ int main()
 		std::cout << "The claimable amount is : " << claimableExpenses << "\n";
 		std::cout << "\n";
 		int nonRefundableTotal = 0;
-		employeesClaim(nonRefundableTotal,totalJourneyCosts);
+		employeesClaim(nonRefundableTotal, totalJourneyCosts);
 
 		if (nonRefundableTotal < 0) {
 			std::cout << "there is no non-refundable costs involved in these journeys";
@@ -198,3 +243,4 @@ int main()
 	}
 	_getch();
 }
+#pragma endregion
