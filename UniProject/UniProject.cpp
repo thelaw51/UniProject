@@ -45,6 +45,7 @@ int getJourneyNum() {
 			ValidJourneyInput = true;
 			system("cls");
 			return ValidJourneyNum;
+			thjgfhdjkzhgjkfdghdzfjgkdfzghdfjkzgndfzjlsdfzngkdfjghndfkjgfdsbngkj
 		}
 		catch (std::invalid_argument& e) {
 			InputDataTypeError();
