@@ -41,7 +41,7 @@ int getJourneyNum() {
 
 		try
 		{
-			ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
+			ValidJourneyNum = std::stoi(JourneyNumInput); // TRYS TO CONVERT INPUT TO INTEGER TO VALIDIDATE USER INPUT
 			ValidJourneyInput = true;
 			system("cls");
 			return ValidJourneyNum;
@@ -66,8 +66,8 @@ int getClaimType() {
 		std::cout << "Choice: ";
 		std::cin >> ClaimTypeInput;
 		try
-		{
-			ValidClaimType = std::stoi(ClaimTypeInput); // Convert input to an integer
+		{ValidClaimType = std::stoi(ClaimTypeInput)
+			; // TRYS TO CONVERT INPUT TO INTEGER TO VALIDIDATE USER INPUT
 			system("cls");
 			if (ValidClaimType != 1 && ValidClaimType != 2)
 			{
@@ -88,7 +88,7 @@ int getClaimType() {
 	}
 	system("cls");
 }
-//GETS CALL THROUGH OUT THE
+//GETS THE USERS TRAVEL COSTS
 int getTravelCosts(int loopCounter) {
 	int journeyTravelCosts;
 	if (loopCounter == 1) {
