@@ -8,8 +8,8 @@
 
 #pragma region "Error Messeges"
 //GENERAL FUNCTION FOR WHEN INCORRECT DATA TYPE IS ENTERED
-void InputDataTypeError() {
-	std::cout << "Invalid input. Please enter a valid .\n";
+void InputNumberDataTypeError() {
+	std::cout << "Invalid input. Please enter a valid Number.\n";
 	std::cout << "PRESS ENTER TO TRY AGAIN";
 	_getch();
 	system("cls");
@@ -42,13 +42,12 @@ int getJourneyNum() {
 		try
 		{
 			ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
-			ValidJourneyInput = true;
 			system("cls");
 			return ValidJourneyNum;
 
 		}
 		catch (std::invalid_argument& e) {
-			InputDataTypeError();
+			InputNumberDataTypeError();
 		}
 	}
 }
@@ -57,7 +56,7 @@ int getClaimType() {
 	std::string ClaimTypeInput;
 	int ValidClaimType;
 	bool ValidClaimTypeSel = false;
-	while (ValidClaimTypeSel == false)
+	while (!ValidClaimTypeSel)
 	{
 		std::cout << "Please select a claim option from below? \n";
 		std::cout << "\n";
@@ -83,28 +82,51 @@ int getClaimType() {
 		}
 		catch (std::invalid_argument& e)
 		{
-			InputDataTypeError();
+			InputNumberDataTypeError();
 		}
 	}
 	system("cls");
 }
 //GETS CALL THROUGH OUT THE
 int getTravelCosts(int loopCounter) {
-	int journeyTravelCosts;
-	if (loopCounter == 1) {
+	std::string TravelCostInput;
+	int ValidClaimType;
+	bool ValidClaimTypeSel = false;
+	while (ValidClaimTypeSel == false) {
+		if (loopCounter == 1) {
 
-		std::cout << "What were the travel costs for your first journey?: ";
-		std::cin >> journeyTravelCosts;
-		system("cls");
-		return journeyTravelCosts;
+			std::cout << "What were the travel costs for your first journey?: ";
+			std::cin >> TravelCostInput;
+			system("cls");
+			try
+			{
+				ValidClaimType = std::stoi(TravelCostInput);
+
+				return ValidClaimType;
+			}
+			catch (const std::exception&)
+			{
+				InputNumberDataTypeError();
+			}
+		}
+		else
+		{
+			std::cout << "What were the travel costs for journey number " << loopCounter << "?: ";
+			std::cin >> TravelCostInput;
+			system("cls");
+			try
+			{
+				ValidClaimType = std::stoi(TravelCostInput);
+				return ValidClaimType;
+			}
+			catch (const std::exception&)
+			{
+				InputNumberDataTypeError();
+			}
+		}
+
 	}
-	else
-	{
-		std::cout << "What were the travel costs for journey number " << loopCounter << "?: ";
-		std::cin >> journeyTravelCosts;
-		system("cls");
-		return journeyTravelCosts;
-	}
+
 
 }
 
