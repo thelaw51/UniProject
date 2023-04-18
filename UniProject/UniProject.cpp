@@ -65,8 +65,9 @@ int getClaimType() {
 		std::cout << "Choice: ";
 		std::cin >> ClaimTypeInput;
 		try
-		{ValidClaimType = std::stoi(ClaimTypeInput)
-			; // TRYS TO CONVERT INPUT TO INTEGER TO VALIDIDATE USER INPUT
+		{
+			ValidClaimType = std::stoi(ClaimTypeInput)
+				; // TRYS TO CONVERT INPUT TO INTEGER TO VALIDIDATE USER INPUT
 			system("cls");
 			if (ValidClaimType != 1 && ValidClaimType != 2)
 			{
@@ -90,9 +91,9 @@ int getClaimType() {
 //GETS THE USERS TRAVEL COSTS
 int getTravelCosts(int loopCounter) {
 	std::string TravelCostInput;
-	int ValidClaimType;
-	bool ValidClaimTypeSel = false;
-	while (ValidClaimTypeSel == false) {
+	int ValidTravelCost;
+	bool ValidTravelCostInput = false;
+	while (ValidTravelCostInput == false) {
 		if (loopCounter == 1) {
 
 			std::cout << "What were the travel costs for your first journey?: ";
@@ -100,9 +101,9 @@ int getTravelCosts(int loopCounter) {
 			system("cls");
 			try
 			{
-				ValidClaimType = std::stoi(TravelCostInput);
+				ValidTravelCost = std::stoi(TravelCostInput);
 
-				return ValidClaimType;
+				return ValidTravelCost;
 			}
 			catch (const std::exception&)
 			{
@@ -116,8 +117,8 @@ int getTravelCosts(int loopCounter) {
 			system("cls");
 			try
 			{
-				ValidClaimType = std::stoi(TravelCostInput);
-				return ValidClaimType;
+				ValidTravelCost = std::stoi(TravelCostInput);
+				return ValidTravelCost;
 			}
 			catch (const std::exception&)
 			{
@@ -263,6 +264,17 @@ int main()
 
 	}
 	else if (claimType == 2) {
+
+		std::vector<int>totalJourneyCosts;
+		int journeyTravelCosts;
+		int claimableExpenses = 0;
+		for (size_t i = 1; i <= journeyNum; i++)
+		{
+
+			journeyTravelCosts = getTravelCosts(i);
+			totalJourneyCosts.push_back(journeyTravelCosts);
+
+		}
 	}
 	_getch();
 }
