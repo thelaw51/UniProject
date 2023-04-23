@@ -4,11 +4,12 @@
 #include <cassert>
 #include <string>
 #include <cstdlib>
-
+#include <algorithm>
 
 #pragma region "Error Messeges"
 //GENERAL FUNCTION FOR WHEN INCORRECT DATA TYPE IS ENTERED
 void InputNumberDataTypeError() {
+	system("cls");
 	std::cout << "Invalid input. Please enter a valid Number.\n";
 	std::cout << "PRESS ENTER TO TRY AGAIN";
 	_getch();
@@ -16,7 +17,7 @@ void InputNumberDataTypeError() {
 }
 
 void WrongMenuOptionSelection() {
-	std::cout << "Invalid choice. Please choose from one of the menu options .\n";
+	std::cout << "Invalid choice. Please choose from one of the menu options.\n";
 	std::cout << "PRESS ENTER TO TRY AGAIN";
 	_getch();
 	system("cls");
@@ -38,11 +39,16 @@ int getJourneyNum() {
 	{
 		std::cout << "Please enter the number of journeys you have taken: ";
 		std::cin >> JourneyNumInput;
+		system("cls");
 
 		try
 		{
 			ValidJourneyNum = std::stoi(JourneyNumInput); // Convert input to an integer
-			system("cls");
+			if (ValidJourneyNum < 1)
+			{
+				InputNumberDataTypeError();
+				continue;
+			}
 			return ValidJourneyNum;
 
 		}
@@ -76,9 +82,7 @@ int getClaimType() {
 			}
 			else
 			{
-				ValidClaimTypeSel = true;
 				return ValidClaimType;
-
 			}
 		}
 		catch (std::invalid_argument& e)
@@ -102,7 +106,11 @@ int getTravelCosts(int loopCounter) {
 			try
 			{
 				ValidTravelCost = std::stoi(TravelCostInput);
-
+				if (ValidTravelCost <= 0)
+				{
+					InputNumberDataTypeError();
+					continue;
+				}
 				return ValidTravelCost;
 			}
 			catch (const std::exception&)
@@ -118,6 +126,11 @@ int getTravelCosts(int loopCounter) {
 			try
 			{
 				ValidTravelCost = std::stoi(TravelCostInput);
+				if (ValidTravelCost <= 0)
+				{
+					InputNumberDataTypeError();
+					continue;
+				}
 				return ValidTravelCost;
 			}
 			catch (const std::exception&)
@@ -132,29 +145,59 @@ int getTravelCosts(int loopCounter) {
 }
 
 int getExpenses(int loopCounter) {
-	int journeyExpenseCosts;
-	if (loopCounter == 1) {
-		std::cout << "What were the Expenses for your first journey?: ";
-		std::cin >> journeyExpenseCosts;
-		system("cls");
-		return journeyExpenseCosts;
-	}
-	else
-	{
-		std::cout << "What were the Expenses for journey number " << loopCounter << "?: ";
-		std::cin >> journeyExpenseCosts;
-		system("cls");
-		return journeyExpenseCosts;
+	std::string ExpensesInput;
+	int ValidExpensesInputVal;
+	bool ValidExpensesInput = false;
+	while (ValidExpensesInput == false) {
+		if (loopCounter == 1) {
+			std::cout << "What were the Expenses for your first journey?: ";
+			std::cin >> ExpensesInput;
+			system("cls");
+			try
+			{
+				ValidExpensesInputVal = std::stoi(ExpensesInput);
+				if (ValidExpensesInputVal <= 0)
+				{
+					InputNumberDataTypeError();
+					continue;
+				}
+				return ValidExpensesInputVal;
+			}
+			catch (const std::exception&)
+			{
+				InputNumberDataTypeError();
+			}
+		}
+		else
+		{
+			std::cout << "What were the Expenses for journey number " << loopCounter << " ?: ";
+			std::cin >> ExpensesInput;
+			system("cls");
+			try
+			{
+				ValidExpensesInputVal = std::stoi(ExpensesInput);
+				if (ValidExpensesInputVal <= 0)
+				{
+					InputNumberDataTypeError();
+					continue;
+				}
+				return ValidExpensesInputVal;
+			}
+			catch (const std::exception&)
+			{
+				InputNumberDataTypeError();
+			}
+		}
 	}
 
 }
 
-int reclaimableTax(int TotalCost) {
-	int reclaimableTax = TotalCost * 0.2;
+int reclaimableTax(int TravelCost) {
+	int reclaimableTax = TravelCost * 0.2;
 	return reclaimableTax;
 }
 
-void showResultsTemplate() {
+void showResultsKeyTemplate(int ClaimType) {
 	std::cout << "Key:\n";
 	std::cout << "---------------------------------------------\n";
 	std::cout << "T = Travel E = Expenses C=Company tax claim\n";
@@ -215,16 +258,18 @@ int main()
 			totalJourneyCosts.push_back(currentJourney);
 		}
 
-		showResultsTemplate();
+		showResultsKeyTemplate(claimType);
 		int previousElement = 0;
-		int rowCount = 0;
+		int rowCount = 1;
 		int elementCount = 0;
 		int expensesTotal = 0;
 		int travelTotal = 0;
+		int totalCost = 0;
+		std::vector<int> LargestPaymentCalcVector;
 		for (const auto& row : totalJourneyCosts) {
-			rowCount += 1;
 			for (const auto& element : row) {
 				elementCount += 1;
+				LargestPaymentCalcVector.push_back(element);
 				if (elementCount == 1) {
 					std::cout << element << " ";
 				}
@@ -240,6 +285,7 @@ int main()
 				else if (elementCount == 1) {
 					travelTotal += element;
 				}
+				totalCost += element;
 			}
 			std::cout << std::endl;
 			elementCount = 0;
@@ -261,7 +307,11 @@ int main()
 		else {
 			std::cout << "The non-refundable amount is " << nonRefundableTotal;
 		}
+		double AveragePayment = totalCost / journeyNum;
+		std::cout << "\nThe average payment is " << AveragePayment;
 
+		int MaxPayment = *std::max_element(LargestPaymentCalcVector.begin(), LargestPaymentCalcVector.end());
+		std::cout << "\nThe max payment is " << MaxPayment;
 	}
 	else if (claimType == 2) {
 
@@ -273,8 +323,19 @@ int main()
 
 			journeyTravelCosts = getTravelCosts(i);
 			totalJourneyCosts.push_back(journeyTravelCosts);
-
 		}
+		int elementCount = 1;
+		for (const auto& element : totalJourneyCosts) {
+			std::cout << "Journey Number " << elementCount << "\n";
+			std::cout << "----------------------------------\n";
+			std::cout << "Travel: " << element << "\n";
+			std::cout << "Company tax deduction: " << reclaimableTax(element) << "\n";
+			std::cout << "Employees will be payed back 100% of travel costs which is " << element << "\n";
+			std::cout << "\n";
+			elementCount += 1;
+		}
+
+
 	}
 	_getch();
 }
